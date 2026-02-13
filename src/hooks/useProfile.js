@@ -99,11 +99,9 @@ function useProfile() {
    * Reset all profile data
    */
   const resetProfile = useCallback(() => {
-    if (window.confirm('모든 프로필 정보를 삭제하시겠습니까?')) {
-      setProfile(null)
-      setPreferences(DEFAULT_PREFERENCES)
-      setHasCompletedOnboarding(false)
-    }
+    setProfile(null)
+    setPreferences(DEFAULT_PREFERENCES)
+    setHasCompletedOnboarding(false)
   }, [setProfile, setPreferences, setHasCompletedOnboarding])
 
   return {

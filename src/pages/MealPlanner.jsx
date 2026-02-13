@@ -3,6 +3,7 @@ import { BookOpen, PieChart, ChevronRight, Award, Zap, LayoutGrid } from 'lucide
 import { recipes } from '../data/recipes'
 import { useNavigate } from 'react-router-dom'
 import LoadingSpinner from '../components/LoadingSpinner'
+import ConfirmDialog from '../components/ConfirmDialog'
 import { NutritionDoughnutChart, WeeklyNutritionChart, NutritionProgressBar } from '../components/NutritionCharts'
 import {
   flattenMealPlan,
@@ -19,6 +20,7 @@ function MealPlanner({ mealPlan, removeMeal }) {
   const [reportType, setReportType] = useState('weekly')
   const [showDetailReport, setShowDetailReport] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [pendingRemoval, setPendingRemoval] = useState(null)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -32,9 +34,14 @@ function MealPlanner({ mealPlan, removeMeal }) {
   const groupedHistory = useMemo(() => groupHistoryByDate(historyList), [historyList])
   const weeklyChartData = useMemo(() => buildWeeklyChartData(historyList), [historyList])
 
-  const handleRemoveMeal = (date, type, mealEntryId) => {
-    if (!window.confirm('이 기록을 삭제하시겠습니까?')) return
-    removeMeal(date, type, mealEntryId)
+  const handleRemoveMeal = (date, type, mealEntryId, recipeName) => {
+    setPendingRemoval({ date, type, mealEntryId, recipeName })
+  }
+
+  const confirmRemoveMeal = () => {
+    if (!pendingRemoval) return
+    removeMeal(pendingRemoval.date, pendingRemoval.type, pendingRemoval.mealEntryId)
+    setPendingRemoval(null)
   }
 
   const handleOpenRecipe = (historyRecipe) => {
@@ -186,6 +193,17 @@ function MealPlanner({ mealPlan, removeMeal }) {
         show={showDetailReport}
         onClose={() => setShowDetailReport(false)}
         analysis={analysis}
+      />
+
+      <ConfirmDialog
+        open={!!pendingRemoval}
+        title="기록 삭제"
+        message={pendingRemoval ? `${pendingRemoval.type} • ${pendingRemoval.recipeName}\n기록을 삭제할까요?` : ''}
+        confirmLabel="삭제하기"
+        cancelLabel="취소"
+        danger={true}
+        onCancel={() => setPendingRemoval(null)}
+        onConfirm={confirmRemoveMeal}
       />
     </div>
   )

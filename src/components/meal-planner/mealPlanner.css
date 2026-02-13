@@ -200,8 +200,17 @@
 .planner-remove-btn {
   background: none;
   border: none;
-  color: #cfd8dc;
-  padding: 5px;
+  color: #b79b8b;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.planner-remove-btn:active {
+  background: rgba(255, 138, 101, 0.12);
+  color: #d76857;
 }
 
 .planner-detail-overlay {

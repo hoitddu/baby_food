@@ -144,6 +144,8 @@
   align-items: center;
   justify-content: space-between;
   transition: all 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .settings-reset-btn:active {

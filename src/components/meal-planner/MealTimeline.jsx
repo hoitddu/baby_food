@@ -35,7 +35,15 @@ function MealTimeline({ groupedHistory, onOpenRecipe, onRemoveMeal }) {
                     {item.recipe.name}
                   </div>
                   <button
-                    onClick={() => onRemoveMeal(item.date, item.type, item.recipe.mealEntryId ?? item.recipe.id)}
+                    type="button"
+                    onClick={() =>
+                      onRemoveMeal(
+                        item.date,
+                        item.type,
+                        item.recipe.mealEntryId ?? item.recipe.id,
+                        item.recipe.name
+                      )
+                    }
                     className="planner-remove-btn"
                   >
                     <Trash2 size={16} />

@@ -1,7 +1,11 @@
+import { useState } from 'react'
 import { ChevronRight, RotateCcw } from 'lucide-react'
+import ConfirmDialog from '../components/ConfirmDialog'
 import './settings.css'
 
 function Settings({ preferences, setPreferences, resetProfile }) {
+  const [showResetDialog, setShowResetDialog] = useState(false)
+
   const togglePref = (key) => {
     setPreferences((prev) => ({ ...prev, [key]: !prev[key] }))
   }
@@ -62,7 +66,7 @@ function Settings({ preferences, setPreferences, resetProfile }) {
           <button
             type="button"
             className="settings-reset-btn"
-            onClick={resetProfile}
+            onClick={() => setShowResetDialog(true)}
           >
             <span className="settings-reset-btn-label">
               <RotateCcw size={16} />
@@ -72,6 +76,20 @@ function Settings({ preferences, setPreferences, resetProfile }) {
           </button>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={showResetDialog}
+        title="온보딩 다시 시작"
+        message={'아기 이름/알레르기 설정을 초기화하고\n완전 첫 화면으로 돌아갈까요?'}
+        confirmLabel="초기화하기"
+        cancelLabel="취소"
+        danger={true}
+        onCancel={() => setShowResetDialog(false)}
+        onConfirm={() => {
+          setShowResetDialog(false)
+          resetProfile()
+        }}
+      />
     </div>
   )
 }
