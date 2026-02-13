@@ -1,170 +1,164 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, AlertTriangle, Heart, X } from 'lucide-react'
 import { recipes } from '../data/recipes'
-import mascotImg from '../assets/mascot.png'
-import { RecipeListSkeleton } from '../components/SkeletonLoader'
+import mascotImg from '../assets/mascot-chatgpt.png'
+import { useRecentSearches, useRecipeSearch } from '../hooks'
+import { getCategoryTheme } from '../domain/categoryTheme'
+import HomeSearchSection from '../components/home/HomeSearchSection'
+import HomeRecipeList from '../components/home/HomeRecipeList'
+import '../components/home/home.css'
+
+const MAX_VISIBLE_RECIPES = 15
 
 function Home({ preferences, profile, favorites, toggleFavorite }) {
-    const navigate = useNavigate()
-    const [activeCategory, setActiveCategory] = useState('All')
-    const [searchTerm, setSearchTerm] = useState('')
-    const [isLoading, setIsLoading] = useState(true)
+  const navigate = useNavigate()
+  const [activeCategory, setActiveCategory] = useState('추천')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+  const [showRecentSearches, setShowRecentSearches] = useState(false)
+  const [expandedContextKey, setExpandedContextKey] = useState('')
+  const sortBy = 'relevance'
 
-    // Simulate initial loading (for better UX and future API integration)
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsLoading(false)
-        }, 300) // Short delay for smooth transition
-        return () => clearTimeout(timer)
-    }, [])
+  const { recentSearches, addSearch, removeSearch, clearSearches } = useRecentSearches(5)
+  const {
+    categories,
+    debouncedSearchTerm,
+    filteredRecipes,
+    suggestions
+  } = useRecipeSearch({
+    recipes,
+    searchTerm,
+    activeCategory,
+    sortBy,
+    debounceMs: 300
+  })
 
-    const babyName = profile?.name || '우리 아기'
-    const categories = ['All', ...new Set(recipes.map(r => r.category))]
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [])
 
-    const allergyKeywords = {
-        dairy: ['우유', '치즈', '요거트', '버터', '크림', '분유'],
-        eggs: ['계란', '달걀', '노른자', '흰자'],
-        peanuts: ['땅콩'],
-        treeNuts: ['호두', '아몬드', '잣', '캐슈넛', '밤'],
-        wheat: ['밀가루', '빵', '국수', '면', '파스타', '소면'],
-        soy: ['콩', '두부', '두유', '간장', '된장', '나또'],
-        fish: ['생선', '대구', '가자미', '조기', '멸치', '연어']
+  const babyName = profile?.name || '우리 아기'
+
+  const handleSearchSubmit = (term = searchTerm) => {
+    const trimmedTerm = term.trim()
+    if (trimmedTerm.length > 0) {
+      addSearch(trimmedTerm)
+      setShowRecentSearches(false)
     }
+  }
 
-    const checkAllergy = (recipe) => {
-        let risks = []
-        const ingredientText = (recipe.ingredients || "").toLowerCase()
-        Object.keys(preferences).forEach(key => {
-            if (preferences[key]) {
-                const keywords = allergyKeywords[key] || []
-                if (keywords.some(k => ingredientText.includes(k))) risks.push(key)
-            }
-        })
-        return risks
+  const applyRecentSearch = (term) => {
+    setSearchTerm(term)
+    setShowRecentSearches(false)
+  }
+
+  useEffect(() => {
+    if (debouncedSearchTerm.trim().length > 0) {
+      addSearch(debouncedSearchTerm.trim())
     }
+  }, [debouncedSearchTerm, addSearch])
 
-    const filteredRecipes = recipes.filter(recipe => {
-        // 1. Category Filter
-        let categoryMatch = activeCategory === 'All' || recipe.category === activeCategory
+  const currentContextKey = `${activeCategory}::${debouncedSearchTerm.trim().toLowerCase()}`
+  const showAllRecipes = expandedContextKey === currentContextKey
 
-        // 2. Search Text Filter
-        const searchMatch = recipe.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (recipe.ingredients && recipe.ingredients.toLowerCase().includes(searchTerm.toLowerCase()))
+  const visibleRecipes = showAllRecipes
+    ? filteredRecipes
+    : filteredRecipes.slice(0, MAX_VISIBLE_RECIPES)
+  const canShowMore = filteredRecipes.length > MAX_VISIBLE_RECIPES && !showAllRecipes
+  const remainingRecipeCount = Math.max(filteredRecipes.length - MAX_VISIBLE_RECIPES, 0)
 
-        return categoryMatch && searchMatch
-    })
+  const handleRecipeClick = (recipe) => {
+    navigate(`/recipe/${recipe.id}`, { state: { recipe } })
+  }
 
-
-
-    return (
-        <div className="page-content">
-            <header className="app-header" style={{ paddingBottom: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div>
-                    <p style={{ fontSize: '0.9rem', color: '#8D6E63', marginBottom: '4px' }}>오늘도 맛있게! 🥄</p>
-                    <h1 style={{ fontSize: '1.6rem' }}>{babyName} 맘,<br />어서오세요!</h1>
-                </div>
-                <img src={mascotImg} alt="Mascot" style={{ width: '80px', height: '80px', objectFit: 'contain' }} />
-            </header>
-
-
-
-            <div className="search-bar">
-                {/* Text Search Input */}
-                <div style={{ position: 'relative' }}>
-                    <Search size={20} color="#BCAAA4" style={{ position: 'absolute', left: '15px', top: '50%', transform: 'translateY(-50%)' }} />
-                    <input
-                        type="text"
-                        placeholder="재료나 메뉴를 검색해보세요"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        style={{ paddingLeft: '45px' }}
-                    />
-                    {searchTerm && (
-                        <X
-                            size={18} color="#BCAAA4"
-                            onClick={() => setSearchTerm('')}
-                            style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', cursor: 'pointer' }}
-                        />
-                    )}
-                </div>
-            </div>
-
-            {/* Categories (Still useful for filtering by Age/Type) */}
-            <div className="category-tabs" style={{ marginTop: '10px' }}>
-                {categories.map(cat => (
-                    <button
-                        key={cat}
-                        className={activeCategory === cat ? 'active' : ''}
-                        onClick={() => setActiveCategory(cat)}
-                    >
-                        {cat}
-                    </button>
-                ))}
-            </div>
-
-            <div className="recipe-list">
-                {isLoading ? (
-                    <RecipeListSkeleton count={6} />
-                ) : filteredRecipes.length === 0 ? (
-                    <div className="empty-state">
-                        <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🤔</div>
-                        <p>
-                            검색 결과가 없어요.<br />
-                            다른 검색어로 찾아보세요!
-                        </p>
-                    </div>
-                ) : (
-                    filteredRecipes.map((recipe, index) => {
-                        const risks = checkAllergy(recipe)
-                        const isSafe = risks.length === 0
-                        const isFavorite = favorites[recipe.name]
-
-                        return (
-                            <div
-                                key={index}
-                                className="recipe-card fade-in"
-                                onClick={() => navigate(`/recipe/${index}`, { state: { recipe } })}
-                                style={{ opacity: isSafe ? 1 : 0.6, position: 'relative' }}
-                            >
-                                {/* Recipe Content */}
-                                <div className="recipe-header">
-                                    <div style={{ flex: 1 }}>
-                                        <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                            {recipe.name}
-                                            {!isSafe && <AlertTriangle size={16} color="#FF5252" />}
-                                        </h3>
-
-                                        {!isSafe && (
-                                            <div style={{ fontSize: '0.75rem', color: '#FF5252', marginTop: '2px' }}>
-                                                ⚠️ 알레르기 주의 ({risks.join(', ')})
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div
-                                        onClick={(e) => {
-                                            e.stopPropagation()
-                                            toggleFavorite(recipe.name)
-                                        }}
-                                        style={{ padding: '10px', marginRight: '-10px' }}
-                                    >
-                                        <Heart
-                                            size={22}
-                                            color={isFavorite ? '#FF5252' : '#D7CCC8'}
-                                            fill={isFavorite ? '#FF5252' : 'none'}
-                                            style={{ transition: 'all 0.2s' }}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    })
-                )}
-            </div>
-            <div style={{ height: '80px' }}></div>
+  return (
+    <div className="page-content">
+      <header className="app-header home-header">
+        <div>
+          <p className="home-header-subtitle">오늘도 맛있게 냠냠</p>
+          <h1 className="home-header-title">{babyName} 맘을<br />사로잡을 메뉴</h1>
         </div>
-    )
+        <div className="home-header-mascot-shell">
+          <img src={mascotImg} alt="Mascot" className="home-header-mascot" />
+        </div>
+      </header>
+
+      <HomeSearchSection
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        showRecentSearches={showRecentSearches}
+        setShowRecentSearches={setShowRecentSearches}
+        handleSearchSubmit={handleSearchSubmit}
+        recentSearches={recentSearches}
+        applyRecentSearch={applyRecentSearch}
+        clearSearches={clearSearches}
+        removeSearch={removeSearch}
+        suggestions={suggestions}
+      />
+
+      <div className="category-tabs home-category-tabs">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            className={activeCategory === cat ? 'active' : ''}
+            onClick={() => setActiveCategory(cat)}
+            style={{
+              '--category-bg': getCategoryTheme(cat).bg,
+              '--category-border': getCategoryTheme(cat).border,
+              '--category-text': getCategoryTheme(cat).text
+            }}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {(debouncedSearchTerm.trim() || activeCategory !== '추천') && !isLoading && (
+        <div className="home-results-info">
+          <div className="home-results-label">
+            {debouncedSearchTerm.trim() && (
+              <>
+                '<strong>{debouncedSearchTerm}</strong>' 검색 결과
+              </>
+            )}
+            {!debouncedSearchTerm.trim() && activeCategory !== '추천' && (
+              <>'{activeCategory}' 카테고리</>
+            )}
+          </div>
+          <div className={`home-results-count ${filteredRecipes.length > 0 ? '' : 'empty'}`.trim()}>
+            {filteredRecipes.length}개
+          </div>
+        </div>
+      )}
+
+      <HomeRecipeList
+        isLoading={isLoading}
+        filteredRecipes={visibleRecipes}
+        preferences={preferences}
+        favorites={favorites}
+        debouncedSearchTerm={debouncedSearchTerm}
+        onRecipeClick={handleRecipeClick}
+        onToggleFavorite={toggleFavorite}
+      />
+
+      {canShowMore && (
+        <div className="home-show-more-wrap">
+          <button
+            type="button"
+            className="home-show-more-btn"
+            onClick={() => setExpandedContextKey(currentContextKey)}
+          >
+            더 보기 {remainingRecipeCount > 0 ? `(${remainingRecipeCount}개)` : ''}
+          </button>
+        </div>
+      )}
+
+      <div className="home-bottom-space"></div>
+    </div>
+  )
 }
 
 export default Home

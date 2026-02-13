@@ -1,0 +1,157 @@
+.settings-page {
+  padding: 0 24px 100px;
+  background: linear-gradient(180deg, #fdf9f2 0%, #fef2e3 100%);
+  min-height: 100vh;
+}
+
+.settings-header-desc {
+  color: #8d6e63;
+}
+
+.settings-section {
+  margin-top: 20px;
+}
+
+.settings-section-title {
+  color: #ff8a65;
+  margin-bottom: 15px;
+}
+
+.settings-card {
+  background: var(--surface-card);
+  border-radius: 20px;
+  padding: 10px 20px;
+  box-shadow: var(--shadow-warm);
+  border: 1px solid var(--line-soft);
+}
+
+.settings-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.settings-item.with-divider {
+  border-bottom: 1px solid #efdfcc;
+}
+
+.settings-item-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-item-label {
+  font-size: 1rem;
+  color: #5d4037;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.settings-item-desc {
+  font-size: 0.75rem;
+  color: #bcaaa4;
+  margin-top: 4px;
+  margin-left: 34px;
+}
+
+.settings-toggle {
+  width: 50px;
+  height: 28px;
+  border-radius: 14px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+  background: #e0e0e0;
+}
+
+.settings-toggle.active {
+  background: #ffab40;
+}
+
+.settings-toggle-knob {
+  width: 24px;
+  height: 24px;
+  background: #fff9f1;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: left 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.settings-toggle-knob.active {
+  left: 24px;
+}
+
+.settings-reset-section {
+  margin-top: 26px;
+}
+
+.settings-reset-card {
+  background: linear-gradient(145deg, #fff4e4 0%, #ffeed8 100%);
+  border: 1px solid #f0d4ae;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: var(--shadow-warm);
+}
+
+.settings-reset-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.settings-reset-title {
+  margin: 0;
+  color: #7a4e2d;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.settings-reset-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #7a4e2d;
+  background: #ffe0b2;
+  border: 1px solid #f2bf7d;
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.settings-reset-desc {
+  margin: 0 0 12px;
+  color: #8d6e63;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.settings-reset-btn {
+  width: 100%;
+  border: 1px solid #e8c497;
+  background: #fffaf2;
+  color: #7a4e2d;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.settings-reset-btn:active {
+  transform: translateY(1px);
+}
+
+.settings-reset-btn-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}

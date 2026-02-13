@@ -26,8 +26,11 @@ function useMealPlan() {
         ? existingMeals
         : [existingMeals]
 
-      // Add new meal with a unique ID to allow deletion
-      const newMeal = { ...recipe, id: Date.now() }
+      // Keep recipe.id intact and store meal-entry id separately for deletion.
+      const newMeal = {
+        ...recipe,
+        mealEntryId: Date.now() + Math.floor(Math.random() * 1000)
+      }
 
       return {
         ...prev,
@@ -43,9 +46,9 @@ function useMealPlan() {
    * Remove a specific meal from history
    * @param {string} date - date in YYYY-MM-DD format
    * @param {string} mealType - meal type
-   * @param {number} recipeId - unique recipe ID
+   * @param {number} mealEntryId - unique meal-entry ID
    */
-  const removeMeal = useCallback((date, mealType, recipeId) => {
+  const removeMeal = useCallback((date, mealType, mealEntryId) => {
     setMealPlan(prev => {
       const newState = { ...prev }
       if (newState[date]) {
@@ -53,7 +56,8 @@ function useMealPlan() {
         const meals = updatedDay[mealType]
 
         if (Array.isArray(meals)) {
-          updatedDay[mealType] = meals.filter(m => m.id !== recipeId)
+          // Legacy support: old entries used `id` as meal entry id.
+          updatedDay[mealType] = meals.filter(m => (m.mealEntryId ?? m.id) !== mealEntryId)
           if (updatedDay[mealType].length === 0) delete updatedDay[mealType]
         } else {
           // Legacy support

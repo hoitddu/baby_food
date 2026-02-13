@@ -13,10 +13,16 @@
   --accent-soft: #FFCCBC;
 
   --bg-gradient-start: #FDFBF7;
-  --bg-gradient-end: #FFF3E0;
+  --bg-gradient-end: #FDE8CC;
 
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.6);
+  --glass-bg: rgba(255, 246, 233, 0.92);
+  --glass-border: rgba(244, 211, 170, 0.45);
+
+  --surface-card: #FFF6EA;
+  --surface-card-muted: #FDF1E2;
+  --surface-input: #FFF9F1;
+  --line-soft: #EEDAC3;
+  --shadow-warm: 0 6px 18px rgba(176, 122, 70, 0.12);
 
   --text-main: #4E342E;
   /* Warm Dark Brown */
@@ -32,7 +38,9 @@
 
 body {
   font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-  background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+  background: radial-gradient(circle at 10% -10%, #FFF2DA 0%, transparent 30%),
+    radial-gradient(circle at 110% 20%, #FDE3C3 0%, transparent 28%),
+    linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
   color: var(--text-main);
   margin: 0;
   padding: 0;
@@ -75,7 +83,7 @@ body {
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0 40px rgba(164, 113, 63, 0.12);
   display: flex;
   flex-direction: column;
   position: relative;
@@ -124,7 +132,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 100%);
+  background: linear-gradient(180deg, rgba(255, 247, 236, 0.96) 0%, rgba(255, 242, 226, 0.7) 100%);
   backdrop-filter: blur(8px);
 }
 
@@ -134,7 +142,8 @@ body {
   padding: 16px 20px;
   border: none;
   border-radius: var(--radius-lg);
-  background: #FFFFFF;
+  background: var(--surface-input);
+  border: 1px solid var(--line-soft);
   font-size: 1rem;
   color: var(--text-main);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
@@ -151,34 +160,28 @@ body {
   color: #D7CCC8;
 }
 
-/* Categories - Horizontal Scroll */
+/* Categories - Wrapped Rows */
 .category-tabs {
   display: flex;
-  padding: 5px 24px 25px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 5px 24px 18px;
   gap: 12px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.category-tabs::-webkit-scrollbar {
-  display: none;
+  overflow-x: visible;
 }
 
 .category-tabs button {
   white-space: nowrap;
   padding: 10px 20px;
-  border: none;
-  background-color: #FFF;
+  border: 1px solid var(--category-border, rgba(0, 0, 0, 0.06));
+  background-color: var(--category-bg, var(--surface-card));
   border-radius: 100px;
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--text-sub);
+  color: var(--category-text, var(--text-sub));
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  border: 1px solid transparent;
 }
 
 .category-tabs button:hover {
@@ -187,9 +190,10 @@ body {
 }
 
 .category-tabs button.active {
-  background-color: var(--text-main);
+  background-color: var(--category-text, var(--text-main));
   color: #FFF;
-  box-shadow: 0 6px 16px rgba(78, 52, 46, 0.25);
+  border-color: var(--category-text, var(--text-main));
+  box-shadow: 0 6px 16px rgba(78, 52, 46, 0.2);
   transform: scale(1.03);
 }
 
@@ -204,12 +208,12 @@ body {
 
 /* Recipe Card - Glassy & Clean */
 .recipe-card {
-  background: #FFFFFF;
+  background: var(--surface-card);
   border-radius: var(--radius-lg);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02), 0 1px 3px rgba(0, 0, 0, 0.02);
+  box-shadow: var(--shadow-warm);
   overflow: hidden;
   transition: all 0.3s ease;
-  border: 1px solid rgba(0, 0, 0, 0.01);
+  border: 1px solid var(--line-soft);
 }
 
 .recipe-card:hover {
@@ -228,7 +232,7 @@ body {
 }
 
 .recipe-header:active {
-  background: #FAFAFA;
+  background: var(--surface-card-muted);
 }
 
 .recipe-header h3 {
@@ -254,7 +258,7 @@ body {
 
 /* Details Section */
 .recipe-details {
-  background: #FDFBF7;
+  background: var(--surface-card-muted);
   padding: 0 24px 24px;
   border-top: 1px dashed rgba(0, 0, 0, 0.05);
   animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -287,11 +291,11 @@ body {
   font-size: 0.95rem;
   line-height: 1.7;
   color: var(--text-sub);
-  background: #FFF;
+  background: var(--surface-input);
   padding: 16px;
   border-radius: var(--radius-md);
   box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.01);
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--line-soft);
   margin: 0;
 }
 

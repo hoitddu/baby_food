@@ -1,0 +1,66 @@
+.skeleton-base {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-card {
+  background: var(--surface-card);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.skeleton-card-content {
+  padding: 16px;
+}
+
+.skeleton-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.skeleton-detail {
+  background: var(--surface-card-muted);
+  min-height: 100vh;
+}
+
+.skeleton-detail-content {
+  padding: 24px;
+}
+
+.skeleton-section {
+  margin-top: 24px;
+}
+
+.skeleton-mt-4 {
+  margin-top: 4px;
+}
+
+.skeleton-mt-8 {
+  margin-top: 8px;
+}
+
+.skeleton-mt-12 {
+  margin-top: 12px;
+}
+
+.skeleton-meal-item {
+  background: var(--surface-card);
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.skeleton-list {
+  padding: 16px;
+}

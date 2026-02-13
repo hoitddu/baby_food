@@ -1,14 +1,41 @@
-import { earlyStage } from './earlyStage'
-import { middleStage } from './middleStage'
-import { snacks } from './snacks'
-import { sideDishes } from './sideDishes'
+import { generatedRecipes } from './generatedRecipes.js'
 
-// 모든 레시피를 합쳐서 내보냅니다.
-// 각 파일에서 가져온 데이터에 'category' 이름을 붙여줍니다.
+const mergedRecipes = generatedRecipes
 
-export const recipes = [
-    ...earlyStage.map(r => ({ ...r, category: "초기 이유식" })),
-    ...middleStage.map(r => ({ ...r, category: "중기 이유식" })),
-    ...snacks.map(r => ({ ...r, category: "간식" })),
-    ...sideDishes.map(r => ({ ...r, category: "유아식 반찬" }))
-];
+const CATEGORY_LABEL_MAP = {
+  '국,탕,맑은국': '국/탕',
+  '단백질(고기,생선,두부,계란)': '단백질',
+  면요리: '면',
+  '죽,리조또,오트밀': '죽/리조또',
+  채소반찬: '반찬',
+  '토스트,팬케이크,머핀': '토스트/팬케이크',
+  '퓨레,소스': '퓨레/소스',
+  한그릇덮밥: '한그릇'
+}
+
+function normalizeCategory(category) {
+  return CATEGORY_LABEL_MAP[category] ?? category
+}
+
+export const recipes = mergedRecipes.map((recipe, index) => ({
+  ...recipe,
+  rawCategory: recipe.category,
+  category: normalizeCategory(recipe.category),
+  id: recipe.id ?? `recipe-${index + 1}`
+}))
+
+export function getRecipeById(id) {
+  return recipes.find((recipe) => recipe.id === id)
+}
+
+export const categories = [...new Set(recipes.map((recipe) => recipe.category))]
+
+export const recipeStats = {
+  total: recipes.length,
+  byCategory: categories.reduce((acc, category) => {
+    acc[category] = recipes.filter((recipe) => recipe.category === category).length
+    return acc
+  }, {})
+}
+
+export default recipes

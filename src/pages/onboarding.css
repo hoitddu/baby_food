@@ -1,0 +1,244 @@
+.onboarding-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(180deg, #fdf9f2 0%, #fdeed8 100%);
+}
+
+.onboarding-shell {
+  box-shadow: none;
+  background: transparent;
+  padding: 20px 24px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.onboarding-progress-track {
+  width: 100%;
+  height: 6px;
+  background: #f1dfc9;
+  border-radius: 3px;
+  margin-bottom: 40px;
+  margin-top: 20px;
+}
+
+.onboarding-progress-fill {
+  width: 33.3333%;
+  height: 100%;
+  background: #ffab40;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.onboarding-progress-fill.step-1 {
+  width: 33.3333%;
+}
+
+.onboarding-progress-fill.step-2 {
+  width: 66.6667%;
+}
+
+.onboarding-progress-fill.step-3 {
+  width: 100%;
+}
+
+.onboarding-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.onboarding-step {
+  text-align: left;
+}
+
+.onboarding-hero {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.onboarding-mascot-shell {
+  width: 170px;
+  height: 170px;
+  margin: 0 auto;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  background: transparent;
+  box-shadow: none;
+}
+
+.onboarding-mascot-shell::before {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 44%,
+    rgba(255, 214, 151, 0.42) 0%,
+    rgba(255, 214, 151, 0.18) 42%,
+    rgba(255, 214, 151, 0) 74%
+  );
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.onboarding-mascot {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 44%;
+  clip-path: circle(46% at 50% 43%);
+  -webkit-mask-image: radial-gradient(
+    circle at 50% 43%,
+    rgba(0, 0, 0, 1) 54%,
+    rgba(0, 0, 0, 0.86) 64%,
+    rgba(0, 0, 0, 0) 78%
+  );
+  mask-image: radial-gradient(
+    circle at 50% 43%,
+    rgba(0, 0, 0, 1) 54%,
+    rgba(0, 0, 0, 0.86) 64%,
+    rgba(0, 0, 0, 0) 78%
+  );
+  transform: scale(1.08);
+  filter: saturate(0.93) brightness(1.1) contrast(0.94);
+  display: block;
+}
+
+.onboarding-title-main {
+  font-size: 1.8rem;
+  color: #4e342e;
+  margin-bottom: 10px;
+}
+
+.onboarding-title-sub {
+  font-size: 1.5rem;
+  color: #4e342e;
+  margin-bottom: 30px;
+}
+
+.onboarding-title-sub.compact {
+  margin-bottom: 10px;
+}
+
+.onboarding-description {
+  color: #8d6e63;
+  line-height: 1.6;
+}
+
+.onboarding-help {
+  color: #bcaaa4;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+}
+
+.onboarding-name-input {
+  width: 100%;
+  padding: 20px;
+  font-size: 1.2rem;
+  border: 2px solid #ffd180;
+  border-radius: 20px;
+  outline: none;
+  background: var(--surface-input);
+  color: #4e342e;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+.onboarding-allergy-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.onboarding-allergy-item {
+  background: var(--surface-card);
+  border: 2px solid transparent;
+  padding: 15px;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-warm);
+}
+
+.onboarding-allergy-item.selected {
+  background: #ffecb3;
+  border-color: #ffab40;
+}
+
+.onboarding-allergy-icon {
+  font-size: 1.2rem;
+}
+
+.onboarding-allergy-label {
+  color: #5d4037;
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.onboarding-allergy-label.selected {
+  font-weight: 700;
+}
+
+.onboarding-check {
+  margin-left: auto;
+}
+
+.onboarding-next-btn {
+  width: 100%;
+  padding: 20px;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #ffd180 0%, #ffab40 100%);
+  color: white;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 700;
+  box-shadow: 0 10px 20px rgba(255, 171, 64, 0.3);
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 20px;
+  margin-bottom: env(safe-area-inset-bottom);
+}
+
+.onboarding-next-btn.disabled {
+  background: #e0e0e0;
+  box-shadow: none;
+}
+
+.onboarding-fade-in {
+  animation: onboardingFadeIn 0.5s ease-out;
+}
+
+.onboarding-slide-in {
+  animation: onboardingSlideIn 0.3s ease-out;
+}
+
+@keyframes onboardingFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes onboardingSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

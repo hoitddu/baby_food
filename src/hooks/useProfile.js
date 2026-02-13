@@ -22,6 +22,7 @@ const DEFAULT_PREFERENCES = {
 function useProfile() {
   const [profile, setProfile] = useLocalStorage('baby_profile', null)
   const [preferences, setPreferences] = useLocalStorage('baby_preferences', DEFAULT_PREFERENCES)
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useLocalStorage('onboarding_completed', false)
 
   /**
    * Update baby profile
@@ -91,7 +92,8 @@ function useProfile() {
         ...data.allergies
       }))
     }
-  }, [setProfile, setPreferences])
+    setHasCompletedOnboarding(true)
+  }, [setProfile, setPreferences, setHasCompletedOnboarding])
 
   /**
    * Reset all profile data
@@ -100,11 +102,13 @@ function useProfile() {
     if (window.confirm('모든 프로필 정보를 삭제하시겠습니까?')) {
       setProfile(null)
       setPreferences(DEFAULT_PREFERENCES)
+      setHasCompletedOnboarding(false)
     }
-  }, [setProfile, setPreferences])
+  }, [setProfile, setPreferences, setHasCompletedOnboarding])
 
   return {
     profile,
+    hasCompletedOnboarding,
     preferences,
     setProfile,
     setPreferences,
